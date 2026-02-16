@@ -8,7 +8,6 @@ struct TaskRow: View {
     var onToggle: () -> Void
     var onTap: () -> Void
 
-    @State private var isPressed = false
     @State private var checkScale: CGFloat = 1.0
 
     var body: some View {

@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import UserNotifications
 
 struct SettingsView: View {
     @Environment(ThemeManager.self) private var themeManager
@@ -254,11 +255,7 @@ struct TagManagerView: View {
     }
 }
 
-// MARK: - UNUserNotificationCenter import
-
-import UserNotifications
-
-#Preview {
+/#Preview {
     SettingsView()
         .modelContainer(for: [Task.self, Project.self, Tag.self, Subtask.self], inMemory: true)
         .environment(ThemeManager.shared)

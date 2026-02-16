@@ -77,7 +77,11 @@ final class Task {
 
     // Relationships
     var project: Project?
+
+    @Relationship(deleteRule: .nullify, inverse: \Tag.tasks)
     var tags: [Tag]
+
+    @Relationship(deleteRule: .cascade, inverse: \Subtask.parentTask)
     var subtasks: [Subtask]
 
     var completedSubtasks: Int {

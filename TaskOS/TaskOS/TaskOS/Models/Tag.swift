@@ -11,7 +11,7 @@ final class Tag {
     var colorName: String
     var createdAt: Date
 
-    @Relationship(inverse: \Task.tags)
+    // inverse declared on Task.tags side
     var tasks: [Task]
 
     var color: Color {

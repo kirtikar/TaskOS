@@ -1,14 +1,163 @@
-import Testing
-import Foundation
+import XCTest
+import XCTest
 @testable import taskOS
 
-// MARK: - AuthenticationService Tests
+final class AuthenticationServiceTests: XCTestCase {
 
-@Suite("AuthenticationService")
-struct AuthenticationServiceTests {
+    override func tearDown() {
+        super.tearDown()
+        UserDefaults.standard.removeObject(forKey: "current_user")
+    }
 
-    // Unique key per test run to avoid cross-test contamination
-    private let udKey = "current_user_test_\(UUID().uuidString)"
+    func test_initialState() {
+        let service = AuthenticationService()
+        XCTAssertNil(service.currentUser)
+        XCTAssertFalse(service.isAuthenticated)
+        XCTAssertFalse(service.isLoading)
+        XCTAssertNil(service.errorMessage)
+    }
+
+    func test_isAuthenticated_reflectsCurrentUser() {
+        let service = AuthenticationService()
+        XCTAssertFalse(service.isAuthenticated)
+        service.currentUser = AppUser(uid: "u1", email: "a@a.com", displayName: "A", photoURL: nil, provider: .apple)
+        XCTAssertTrue(service.isAuthenticated)
+    }
+
+    func test_signOut_clearsUser() {
+        let service = AuthenticationService()
+        service.currentUser = AppUser(uid: "u1", email: "a@a.com", displayName: "A", photoURL: nil, provider: .apple)
+        service.signOut()
+        XCTAssertNil(service.currentUser)
+        XCTAssertFalse(service.isAuthenticated)
+    }
+
+    func test_signOut_removesUserDefaults() throws {
+        struct P: Codable { let uid, provider: String; let email, displayName, photoURLString: String? }
+        let data = try JSONEncoder().encode(P(uid: "u1", provider: "apple.com", email: nil, displayName: nil, photoURLString: nil))
+        UserDefaults.standard.set(data, forKey: "current_user")
+        AuthenticationService().signOut()
+        XCTAssertNil(UserDefaults.standard.data(forKey: "current_user"))
+    }
+
+    func test_restoreSession_decodesValidUser() throws {
+        struct P: Codable { let uid, provider: String; let email, displayName, photoURLString: String? }
+        let data = try JSONEncoder().encode(P(uid: "uid1", provider: "apple.com", email: "a@b.com", displayName: "Test", photoURLString: nil))
+        UserDefaults.standard.set(data, forKey: "current_user")
+        let service = AuthenticationService()
+        service.restoreSession()
+        let user = try XCTUnwrap(service.currentUser)
+        XCTAssertEqual(user.uid, "uid1")
+        XCTAssertEqual(user.email, "a@b.com")
+        XCTAssertEqual(user.provider, .apple)
+    }
+
+    func test_restoreSession_nilWhenNoData() {
+        let service = AuthenticationService()
+        service.restoreSession()
+        XCTAssertNil(service.currentUser)
+    }
+
+    func test_restoreSession_nilWhenCorrupt() {
+        UserDefaults.standard.set(Data([0xFF, 0xFE]), forKey: "current_user")
+        let service = AuthenticationService()
+        service.restoreSession()
+        XCTAssertNil(service.currentUser)
+    }
+
+    func test_googleSignIn_throwsWithoutFirebase() async {
+        do {
+            _ = try await AuthenticationService().signInWithGoogle(presentingViewController: .init())
+            XCTFail("Expected error")
+        } catch let e as AuthError {
+            guard case .unknown = e else { return XCTFail("Wrong error: \(e)") }
+        } catch { XCTFail("Unexpected: \(error)") }
+    }
+
+    func test_emailSignIn_throwsWithoutFirebase() async {
+        do {
+            _ = try await AuthenticationService().signInWithEmail(email: "t@t.com", password: "pw")
+            XCTFail("Expected error")
+        } catch let e as AuthError {
+            guard case .unknown = e else { return XCTFail("Wrong error: \(e)") }
+        } catch { XCTFail("Unexpected: \(error)") }
+    }
+
+    func test_createAccount_throwsWithoutFirebase() async {
+        do {
+            _ = try await AuthenticationService().createAccount(email: "t@t.com", password: "pw", displayName: "T")
+            XCTFail("Expected error")
+        } catch let e as AuthError {
+            guard case .unknown = e else { return XCTFail("Wrong error: \(e)") }
+        } catch { XCTFail("Unexpected: \(error)") }
+    }
+
+    func test_passwordReset_throwsWithoutFirebase() async {
+        do {
+            try await AuthenticationService().sendPasswordReset(email: "t@t.com")
+            XCTFail("Expected error")
+        } catch let e as AuthError {
+            guard case .unknown = e else { return XCTFail("Wrong error: \(e)") }
+        } catch { XCTFail("Unexpected: \(error)") }
+    }
+}
+
+final class AppUserTests: XCTestCase {
+
+    func test_initials_fullName()    { XCTAssertEqual(makeUser("John Doe").initials, "JD") }
+    func test_initials_singleName()  { XCTAssertEqual(makeUser("Alice").initials, "A") }
+    func test_initials_fromEmail()   { XCTAssertEqual(AppUser(uid:"u",email:"bob@x.com",displayName:nil,photoURL:nil,provider:.email).initials, "B") }
+    func test_initials_bothNil()     { XCTAssertEqual(AppUser(uid:"u",email:nil,displayName:nil,photoURL:nil,provider:.apple).initials, "?") }
+    func test_firstName_fullName()   { XCTAssertEqual(makeUser("Jane Smith").firstName, "Jane") }
+    func test_firstName_nilName()    { XCTAssertEqual(AppUser(uid:"u",email:"t@t.com",displayName:nil,photoURL:nil,provider:.email).firstName, "") }
+
+    func test_equality() {
+        let a = makeUser("A", uid: "x")
+        let b = makeUser("A", uid: "x")
+        let c = makeUser("A", uid: "y")
+        XCTAssertEqual(a, b)
+        XCTAssertNotEqual(a, c)
+    }
+
+    private func makeUser(_ name: String, uid: String = "u1") -> AppUser {
+        AppUser(uid: uid, email: "a@a.com", displayName: name, photoURL: nil, provider: .apple)
+    }
+}
+
+final class AuthErrorTests: XCTestCase {
+
+    func test_allCases_haveDescriptions() {
+        let errors: [AuthError] = [.signInCancelled, .noIDToken, .invalidCredential,
+            .networkError, .userNotFound, .wrongPassword, .emailAlreadyInUse,
+            .weakPassword, .unknown("msg")]
+        for e in errors {
+            XCTAssertFalse(e.errorDescription?.isEmpty ?? true, "Empty description for \(e)")
+        }
+    }
+
+    func test_unknown_carriesMessage() {
+        XCTAssertEqual(AuthError.unknown("Custom").errorDescription, "Custom")
+    }
+}
+
+final class AuthProviderTests: XCTestCase {
+
+    func test_rawValues() {
+        XCTAssertEqual(AuthProvider.apple.rawValue,  "apple.com")
+        XCTAssertEqual(AuthProvider.google.rawValue, "google.com")
+        XCTAssertEqual(AuthProvider.email.rawValue,  "password")
+    }
+
+    func test_codableRoundTrip() throws {
+        for p in [AuthProvider.apple, .google, .email] {
+            let decoded = try JSONDecoder().decode(AuthProvider.self, from: try JSONEncoder().encode(p))
+            XCTAssertEqual(decoded, p)
+        }
+    }
+}
+
+// ---- REMOVE EVERYTHING BELOW THIS LINE (old @Suite content) ----
+private let _unusedSentinel = 0
 
     // MARK: - Initial State
 

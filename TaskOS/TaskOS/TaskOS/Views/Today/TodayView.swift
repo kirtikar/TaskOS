@@ -209,26 +209,7 @@ struct TaskSection: View {
     }
 }
 
-// MARK: - FilterChip
-
-struct FilterChip: View {
-    let label: String
-    let isSelected: Bool
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            Text(label)
-                .font(DS.Typography.footnote)
-                .foregroundStyle(isSelected ? .white : DS.Colors.secondaryLabel)
-                .padding(.horizontal, DS.Spacing.sm)
-                .padding(.vertical, DS.Spacing.xxs + 2)
-                .background(isSelected ? DS.Colors.accent : DS.Colors.secondaryBG)
-                .clipShape(Capsule())
-        }
-        .buttonStyle(.plain)
-    }
-}
+// FilterChip → defined in DesignSystem/Components/Sheets.swift
 
 #Preview {
     TodayView()
