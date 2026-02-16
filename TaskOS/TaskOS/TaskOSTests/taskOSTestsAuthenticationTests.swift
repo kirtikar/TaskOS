@@ -1,6 +1,6 @@
 import XCTest
 import XCTest
-@testable import taskOS
+@testable import TaskOS
 
 final class AuthenticationServiceTests: XCTestCase {
 

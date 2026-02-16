@@ -1,7 +1,7 @@
 import Testing
 import Foundation
 import UserNotifications
-@testable import taskOS
+@testable import TaskOS
 
 // MARK: - NotificationService Tests
 //

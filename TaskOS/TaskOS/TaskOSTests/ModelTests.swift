@@ -1,5 +1,5 @@
 import XCTest
-@testable import taskOS
+@testable import TaskOS
 
 final class TaskModelTests: XCTestCase {
 

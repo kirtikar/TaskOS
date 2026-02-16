@@ -1,7 +1,7 @@
 import Testing
 import Foundation
 import SwiftUI
-@testable import taskOS
+@testable import TaskOS
 
 // MARK: - ThemeManager Tests
 

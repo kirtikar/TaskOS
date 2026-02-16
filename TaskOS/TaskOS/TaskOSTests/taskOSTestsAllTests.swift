@@ -1,7 +1,7 @@
 import XCTest
 import SwiftUI
 import SwiftData
-@testable import taskOS
+@testable import TaskOS
 
 // MARK: - ThemeManager
 

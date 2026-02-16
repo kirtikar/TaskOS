@@ -19,13 +19,7 @@
     ]
   },
   "testTargets" : [
-    {
-      "target" : {
-        "containerPath" : "container:taskOS.xcodeproj",
-        "identifier" : "taskOSTests",
-        "name" : "taskOSTests"
-      }
-    }
+
   ],
   "version" : 1
 }

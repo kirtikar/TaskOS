@@ -1,6 +1,6 @@
 import XCTest
 import SwiftData
-@testable import taskOS
+@testable import TaskOS
 
 final class ViewModelTests: XCTestCase {
 

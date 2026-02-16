@@ -1,7 +1,7 @@
 import Testing
 import Foundation
 import SwiftData
-@testable import taskOS
+@testable import TaskOS
 
 // MARK: - TaskDetailViewModel Tests
 

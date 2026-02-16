@@ -1,6 +1,6 @@
 import XCTest
 import SwiftUI
-@testable import taskOS
+@testable import TaskOS
 
 final class ThemeTests: XCTestCase {
 

@@ -1,6 +1,6 @@
 import Testing
 import Foundation
-@testable import taskOS
+@testable import TaskOS
 
 // MARK: - Task Model Tests
 

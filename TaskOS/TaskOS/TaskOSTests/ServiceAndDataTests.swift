@@ -1,7 +1,7 @@
 import XCTest
 import SwiftData
 import UserNotifications
-@testable import taskOS
+@testable import TaskOS
 
 // MARK: - Notification Tests
 
