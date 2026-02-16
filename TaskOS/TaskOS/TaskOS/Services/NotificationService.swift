@@ -36,7 +36,7 @@ final class NotificationService {
     // MARK: - Schedule
 
     func scheduleReminder(id: String, title: String, body: String, date: Date) async {
-        guard isAuthorized else {
+        if !isAuthorized {
             let granted = await requestPermission()
             guard granted else { return }
         }
