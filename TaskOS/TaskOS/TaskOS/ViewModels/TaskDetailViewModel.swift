@@ -43,7 +43,7 @@ final class TaskDetailViewModel {
 
     func scheduleReminder(for task: Task, notificationService: NotificationService) {
         guard let reminder = task.reminderDate else { return }
-        Task {
+        Task<Void, Never> {
             await notificationService.scheduleReminder(
                 id: task.id.uuidString,
                 title: task.title,

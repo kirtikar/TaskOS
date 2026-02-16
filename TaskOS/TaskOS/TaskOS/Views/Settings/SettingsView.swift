@@ -147,7 +147,7 @@ struct SettingsView: View {
     }
 
     private func requestNotificationPermission() {
-        Task {
+        Task<Void, Never> {
             let center = UNUserNotificationCenter.current()
             let granted = try? await center.requestAuthorization(options: [.alert, .badge, .sound])
             await MainActor.run {

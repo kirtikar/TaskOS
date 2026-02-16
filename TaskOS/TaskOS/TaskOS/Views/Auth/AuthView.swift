@@ -147,7 +147,7 @@ struct AuthView: View {
             .frame(height: 50)
             .clipShape(RoundedRectangle(cornerRadius: DS.Radius.sm))
             .onTapGesture {
-                Task {
+                Task<Void, Never> {
                     do {
                         try await auth.signInWithApple()
                     } catch AuthError.signInCancelled {
@@ -168,7 +168,7 @@ struct AuthView: View {
                 background: DS.Colors.secondaryBG,
                 border: DS.Colors.separator
             ) {
-                Task {
+                Task<Void, Never> {
                     guard let vc = UIApplication.shared.connectedScenes
                         .compactMap({ ($0 as? UIWindowScene)?.windows.first?.rootViewController })
                         .first else { return }
@@ -229,7 +229,7 @@ struct SignInForm: View {
                 label: "Sign In",
                 isLoading: auth.isLoading
             ) {
-                Task { await signIn() }
+                Task<Void, Never> { await signIn() }
             }
         }
         .sheet(isPresented: $showForgotPassword) {
@@ -305,7 +305,7 @@ struct SignUpForm: View {
                 label: "Create Account",
                 isLoading: auth.isLoading
             ) {
-                Task { await signUp() }
+                Task<Void, Never> { await signUp() }
             }
 
             Text("By signing up you agree to our Terms of Service and Privacy Policy.")
@@ -387,7 +387,7 @@ struct ForgotPasswordView: View {
                         }
 
                         PrimaryAuthButton(label: "Send Reset Link", isLoading: false) {
-                            Task {
+                            Task<Void, Never> {
                                 do {
                                     try await auth.sendPasswordReset(email: email)
                                     sent = true

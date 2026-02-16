@@ -9,7 +9,7 @@ final class NotificationService {
     var isAuthorized = false
 
     init() {
-        Task { await checkPermission() }
+        Task<Void, Never> { await checkPermission() }
     }
 
     // MARK: - Permission
