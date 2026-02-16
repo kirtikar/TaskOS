@@ -7,7 +7,7 @@ struct ProjectDetailView: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var viewModel = ProjectDetailViewModel()
-    @State private var selectedTask: Task?
+    @State private var selectedTask: TaskItem?
     @State private var showAddTask = false
 
     var body: some View {
@@ -161,6 +161,6 @@ struct ProjectDetailView: View {
     return NavigationStack {
         ProjectDetailView(project: project)
     }
-    .modelContainer(for: [Task.self, Project.self, Tag.self, Subtask.self], inMemory: true)
+    .modelContainer(for: [TaskItem.self, Project.self, Tag.self, Subtask.self], inMemory: true)
     .environment(ThemeManager.shared)
 }

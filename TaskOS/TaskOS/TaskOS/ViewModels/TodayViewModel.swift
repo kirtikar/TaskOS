@@ -14,14 +14,14 @@ final class TodayViewModel {
         case upcoming = "Upcoming"
     }
 
-    func toggleTask(_ task: Task) {
+    func toggleTask(_ task: TaskItem) {
         withAnimation(DS.Animation.quick) {
             task.isCompleted.toggle()
             task.completedAt = task.isCompleted ? Date() : nil
         }
     }
 
-    func todayTasks(from all: [Task]) -> [Task] {
+    func todayTasks(from all: [TaskItem]) -> [TaskItem] {
         all.filter { $0.isDueToday && !$0.isCompleted }
            .sorted { a, b in
                let ap = a.priority.rawValue
@@ -31,12 +31,12 @@ final class TodayViewModel {
            }
     }
 
-    func overdueTasks(from all: [Task]) -> [Task] {
+    func overdueTasks(from all: [TaskItem]) -> [TaskItem] {
         all.filter { $0.isOverdue && !$0.isCompleted }
            .sorted { ($0.dueDate ?? .distantPast) < ($1.dueDate ?? .distantPast) }
     }
 
-    func upcomingTasks(from all: [Task]) -> [Task] {
+    func upcomingTasks(from all: [TaskItem]) -> [TaskItem] {
         let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Calendar.current.startOfDay(for: Date()))!
         let nextWeek = Calendar.current.date(byAdding: .day, value: 7, to: Date())!
         return all.filter {
@@ -46,7 +46,7 @@ final class TodayViewModel {
         .sorted { ($0.dueDate ?? .distantFuture) < ($1.dueDate ?? .distantFuture) }
     }
 
-    func completedTodayTasks(from all: [Task]) -> [Task] {
+    func completedTodayTasks(from all: [TaskItem]) -> [TaskItem] {
         all.filter {
             guard $0.isCompleted, let completedAt = $0.completedAt else { return false }
             return Calendar.current.isDateInToday(completedAt)

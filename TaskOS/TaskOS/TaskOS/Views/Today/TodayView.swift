@@ -2,11 +2,11 @@ import SwiftUI
 import SwiftData
 
 struct TodayView: View {
-    @Query(filter: #Predicate<Task> { !$0.isCompleted }, sort: \Task.createdAt) private var activeTasks: [Task]
-    @Query(sort: \Task.completedAt, order: .reverse) private var allTasks: [Task]
+    @Query(filter: #Predicate<TaskItem> { !$0.isCompleted }, sort: \TaskItem.createdAt) private var activeTasks: [TaskItem]
+    @Query(sort: \TaskItem.completedAt, order: .reverse) private var allTasks: [TaskItem]
 
     @State private var viewModel = TodayViewModel()
-    @State private var selectedTask: Task? = nil
+    @State private var selectedTask: TaskItem? = nil
     @State private var showCompleted = false
 
     var body: some View {
@@ -178,10 +178,10 @@ struct TodayView: View {
 struct TaskSection: View {
     let title: String
     let count: Int
-    let tasks: [Task]
+    let tasks: [TaskItem]
     var titleColor: Color = DS.Colors.secondaryLabel
-    var onTap: (Task) -> Void
-    var onToggle: (Task) -> Void
+    var onTap: (TaskItem) -> Void
+    var onToggle: (TaskItem) -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -213,6 +213,6 @@ struct TaskSection: View {
 
 #Preview {
     TodayView()
-        .modelContainer(for: [Task.self, Project.self, Tag.self, Subtask.self], inMemory: true)
+        .modelContainer(for: [TaskItem.self, Project.self, Tag.self, Subtask.self], inMemory: true)
         .environment(ThemeManager.shared)
 }

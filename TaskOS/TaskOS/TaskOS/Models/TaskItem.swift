@@ -45,7 +45,7 @@ final class Subtask {
     var title: String
     var isCompleted: Bool
     var order: Int
-    var parentTask: Task?
+    var parentTask: TaskItem?
 
     init(title: String, order: Int = 0) {
         self.id = UUID()
@@ -55,10 +55,10 @@ final class Subtask {
     }
 }
 
-// MARK: - Task
+// MARK: - TaskItem
 
 @Model
-final class Task {
+final class TaskItem {
     var id: UUID
     var title: String
     var notes: String

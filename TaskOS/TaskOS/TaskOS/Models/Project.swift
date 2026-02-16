@@ -67,14 +67,14 @@ final class Project {
     var createdAt: Date
     var order: Int
 
-    @Relationship(deleteRule: .nullify, inverse: \Task.project)
-    var tasks: [Task]
+    @Relationship(deleteRule: .nullify, inverse: \TaskItem.project)
+    var tasks: [TaskItem]
 
-    var activeTasks: [Task] {
+    var activeTasks: [TaskItem] {
         tasks.filter { !$0.isCompleted }
     }
 
-    var completedTasks: [Task] {
+    var completedTasks: [TaskItem] {
         tasks.filter(\.isCompleted)
     }
 

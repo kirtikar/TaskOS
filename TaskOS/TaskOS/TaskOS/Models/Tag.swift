@@ -11,8 +11,8 @@ final class Tag {
     var colorName: String
     var createdAt: Date
 
-    // inverse declared on Task.tags side
-    var tasks: [Task]
+    // inverse declared on TaskItem.tags side
+    var tasks: [TaskItem]
 
     var color: Color {
         Color(hex: colorName) ?? .blue

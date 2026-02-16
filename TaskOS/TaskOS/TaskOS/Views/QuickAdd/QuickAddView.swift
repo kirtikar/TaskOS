@@ -213,7 +213,7 @@ struct QuickAddView: View {
         let trimmed = title.trimmingCharacters(in: .whitespaces)
         guard !trimmed.isEmpty else { return }
 
-        let task = Task(
+        let task = TaskItem(
             title: trimmed,
             notes: notes,
             isInInbox: selectedProject == nil,
@@ -272,6 +272,6 @@ struct AttributePill: View {
 
 #Preview {
     QuickAddView()
-        .modelContainer(for: [Task.self, Project.self, Tag.self, Subtask.self], inMemory: true)
+        .modelContainer(for: [TaskItem.self, Project.self, Tag.self, Subtask.self], inMemory: true)
         .environment(ThemeManager.shared)
 }

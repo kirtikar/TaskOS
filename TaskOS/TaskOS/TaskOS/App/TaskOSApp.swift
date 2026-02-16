@@ -9,7 +9,7 @@ struct TaskOSApp: App {
 
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Task.self,
+            TaskItem.self,
             Project.self,
             Tag.self,
             Subtask.self

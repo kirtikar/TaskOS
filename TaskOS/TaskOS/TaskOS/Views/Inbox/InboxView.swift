@@ -3,20 +3,20 @@ import SwiftData
 
 struct InboxView: View {
     @Query(
-        filter: #Predicate<Task> { $0.isInInbox },
-        sort: \Task.createdAt,
+        filter: #Predicate<TaskItem> { $0.isInInbox },
+        sort: \TaskItem.createdAt,
         order: .reverse
-    ) private var inboxTasks: [Task]
+    ) private var inboxTasks: [TaskItem]
 
     @Query private var projects: [Project]
     @Environment(\.modelContext) private var context
 
     @State private var viewModel = InboxViewModel()
-    @State private var selectedTask: Task?
+    @State private var selectedTask: TaskItem?
     @State private var showSortMenu = false
     @State private var searchText = ""
 
-    private var filteredTasks: [Task] {
+    private var filteredTasks: [TaskItem] {
         let base = viewModel.sortedTasks(inboxTasks)
         guard !searchText.isEmpty else { return base }
         return base.filter {
@@ -138,7 +138,7 @@ struct InboxView: View {
     // MARK: - Context Menu
 
     @ViewBuilder
-    private func inboxContextMenu(for task: Task) -> some View {
+    private func inboxContextMenu(for task: TaskItem) -> some View {
         Button {
             selectedTask = task
         } label: {
@@ -176,6 +176,6 @@ struct InboxView: View {
 
 #Preview {
     InboxView()
-        .modelContainer(for: [Task.self, Project.self, Tag.self, Subtask.self], inMemory: true)
+        .modelContainer(for: [TaskItem.self, Project.self, Tag.self, Subtask.self], inMemory: true)
         .environment(ThemeManager.shared)
 }

@@ -57,7 +57,7 @@ final class ProjectDetailViewModel {
     var showCompleted = false
     var showEditSheet = false
 
-    func sortedTasks(_ tasks: [Task]) -> [Task] {
+    func sortedTasks(_ tasks: [TaskItem]) -> [TaskItem] {
         let filtered = showCompleted ? tasks : tasks.filter { !$0.isCompleted }
         return filtered.sorted { a, b in
             switch sortOrder {
@@ -70,7 +70,7 @@ final class ProjectDetailViewModel {
         }
     }
 
-    func toggleTask(_ task: Task) {
+    func toggleTask(_ task: TaskItem) {
         withAnimation(DS.Animation.quick) {
             task.isCompleted.toggle()
             task.completedAt = task.isCompleted ? Date() : nil

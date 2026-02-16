@@ -12,7 +12,7 @@ final class TaskDetailViewModel {
     var newSubtaskTitle   = ""
     var isSaving          = false
 
-    func addSubtask(to task: Task, context: ModelContext) {
+    func addSubtask(to task: TaskItem, context: ModelContext) {
         let trimmed = newSubtaskTitle.trimmingCharacters(in: .whitespaces)
         guard !trimmed.isEmpty else { return }
         let subtask = Subtask(title: trimmed, order: task.subtasks.count)
@@ -21,7 +21,7 @@ final class TaskDetailViewModel {
         newSubtaskTitle = ""
     }
 
-    func deleteSubtask(_ subtask: Subtask, from task: Task, context: ModelContext) {
+    func deleteSubtask(_ subtask: Subtask, from task: TaskItem, context: ModelContext) {
         task.subtasks.removeAll { $0.id == subtask.id }
         context.delete(subtask)
     }
@@ -32,18 +32,18 @@ final class TaskDetailViewModel {
         }
     }
 
-    func clearDueDate(from task: Task) {
+    func clearDueDate(from task: TaskItem) {
         task.dueDate = nil
         task.reminderDate = nil
     }
 
-    func clearReminder(from task: Task) {
+    func clearReminder(from task: TaskItem) {
         task.reminderDate = nil
     }
 
-    func scheduleReminder(for task: Task, notificationService: NotificationService) {
+    func scheduleReminder(for task: TaskItem, notificationService: NotificationService) {
         guard let reminder = task.reminderDate else { return }
-        Task<Void, Never> {
+        Task {
             await notificationService.scheduleReminder(
                 id: task.id.uuidString,
                 title: task.title,

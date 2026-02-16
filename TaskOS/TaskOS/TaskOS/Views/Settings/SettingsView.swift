@@ -168,7 +168,7 @@ struct SettingsView: View {
 
     private func resetAllData() {
         do {
-            try context.delete(model: Task.self)
+            try context.delete(model: TaskItem.self)
             try context.delete(model: Project.self)
             try context.delete(model: Tag.self)
             try context.delete(model: Subtask.self)
@@ -257,6 +257,6 @@ struct TagManagerView: View {
 
 #Preview {
     SettingsView()
-        .modelContainer(for: [Task.self, Project.self, Tag.self, Subtask.self], inMemory: true)
+        .modelContainer(for: [TaskItem.self, Project.self, Tag.self, Subtask.self], inMemory: true)
         .environment(ThemeManager.shared)
 }

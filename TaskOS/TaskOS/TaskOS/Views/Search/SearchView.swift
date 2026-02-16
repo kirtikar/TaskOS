@@ -2,12 +2,12 @@ import SwiftUI
 import SwiftData
 
 struct SearchView: View {
-    @Query private var allTasks: [Task]
+    @Query private var allTasks: [TaskItem]
     @Query private var allProjects: [Project]
     @Query private var allTags: [Tag]
 
     @State private var searchText = ""
-    @State private var selectedTask: Task?
+    @State private var selectedTask: TaskItem?
     @State private var selectedFilter: SearchFilter = .all
 
     enum SearchFilter: String, CaseIterable {
@@ -17,7 +17,7 @@ struct SearchView: View {
         case tags     = "Tags"
     }
 
-    private var matchedTasks: [Task] {
+    private var matchedTasks: [TaskItem] {
         guard !searchText.isEmpty else { return [] }
         return allTasks.filter {
             $0.title.localizedCaseInsensitiveContains(searchText) ||
@@ -146,6 +146,6 @@ struct SearchView: View {
 
 #Preview {
     SearchView()
-        .modelContainer(for: [Task.self, Project.self, Tag.self, Subtask.self], inMemory: true)
+        .modelContainer(for: [TaskItem.self, Project.self, Tag.self, Subtask.self], inMemory: true)
         .environment(ThemeManager.shared)
 }

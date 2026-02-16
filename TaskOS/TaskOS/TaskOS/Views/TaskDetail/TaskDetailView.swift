@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 
 struct TaskDetailView: View {
-    @Bindable var task: Task
+    @Bindable var task: TaskItem
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
 
@@ -409,12 +409,12 @@ struct SubtaskRow: View {
 // → defined in DesignSystem/Components/Sheets.swift
 
 #Preview {
-    let task = Task(title: "Design the new homepage", notes: "Check with team first")
+    let task = TaskItem(title: "Design the new homepage", notes: "Check with team first")
     task.priority = .high
     task.dueDate = Date()
     return NavigationStack {
         TaskDetailView(task: task)
     }
-    .modelContainer(for: [Task.self, Project.self, Tag.self, Subtask.self], inMemory: true)
+    .modelContainer(for: [TaskItem.self, Project.self, Tag.self, Subtask.self], inMemory: true)
     .environment(ThemeManager.shared)
 }

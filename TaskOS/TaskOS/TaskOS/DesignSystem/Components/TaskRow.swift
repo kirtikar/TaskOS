@@ -4,7 +4,7 @@ import SwiftUI
 // The core reusable cell used in every task list in the app.
 
 struct TaskRow: View {
-    let task: Task
+    let task: TaskItem
     var onToggle: () -> Void
     var onTap: () -> Void
 
@@ -165,7 +165,7 @@ extension Date {
 // MARK: - Preview
 
 #Preview {
-    let task = Task(title: "Review design mockups", notes: "Check Figma", dueDate: Date())
+    let task = TaskItem(title: "Review design mockups", notes: "Check Figma", dueDate: Date())
     task.priority = .high
     return List {
         TaskRow(task: task, onToggle: {}, onTap: {})

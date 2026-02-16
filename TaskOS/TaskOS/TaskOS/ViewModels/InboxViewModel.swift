@@ -24,7 +24,7 @@ final class InboxViewModel {
         }
     }
 
-    func sortedTasks(_ tasks: [Task]) -> [Task] {
+    func sortedTasks(_ tasks: [TaskItem]) -> [TaskItem] {
         let filtered = showCompleted ? tasks : tasks.filter { !$0.isCompleted }
         return filtered.sorted { a, b in
             switch sortOrder {
@@ -45,18 +45,18 @@ final class InboxViewModel {
         }
     }
 
-    func toggleTask(_ task: Task) {
+    func toggleTask(_ task: TaskItem) {
         withAnimation(DS.Animation.quick) {
             task.isCompleted.toggle()
             task.completedAt = task.isCompleted ? Date() : nil
         }
     }
 
-    func deleteTask(_ task: Task, context: ModelContext) {
+    func deleteTask(_ task: TaskItem, context: ModelContext) {
         context.delete(task)
     }
 
-    func moveTasks(_ tasks: [Task], to project: Project) {
+    func moveTasks(_ tasks: [TaskItem], to project: Project) {
         tasks.forEach {
             $0.project = project
             $0.isInInbox = false
