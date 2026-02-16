@@ -1,0 +1,31 @@
+{
+  "configurations" : [
+    {
+      "id" : "1A2B3C4D-0001-0001-0001-000000000001",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : true,
+    "codeCoverageTargets" : [
+      {
+        "containerPath" : "container:taskOS.xcodeproj",
+        "identifier" : "taskOS",
+        "name" : "taskOS"
+      }
+    ]
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:taskOS.xcodeproj",
+        "identifier" : "taskOSTests",
+        "name" : "taskOSTests"
+      }
+    }
+  ],
+  "version" : 1
+}

@@ -1,0 +1,97 @@
+name: taskOS CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Build & Test (iOS Simulator)
+    runs-on: macos-15
+
+    steps:
+      # ── 1. Checkout ──────────────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2. Select Xcode ──────────────────────────────────────────────────────
+      - name: Select Xcode 16
+        run: sudo xcode-select -s /Applications/Xcode_16.app/Contents/Developer
+
+      # ── 3. Show environment info ─────────────────────────────────────────────
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Show available simulators
+        run: xcrun simctl list devices available --json | python3 -c "
+import sys, json
+data = json.load(sys.stdin)
+for runtime, devices in data['devices'].items():
+    if 'iOS' in runtime and devices:
+        print(runtime)
+        for d in devices[:3]:
+            print(f'  {d[\"name\"]} — {d[\"udid\"]}')
+"
+
+      # ── 4. Resolve Swift Packages ─────────────────────────────────────────────
+      - name: Resolve Swift Package dependencies
+        run: |
+          xcodebuild -resolvePackageDependencies \
+            -scheme taskOS \
+            -project taskOS.xcodeproj
+
+      # ── 5. Build ──────────────────────────────────────────────────────────────
+      - name: Build taskOS
+        run: |
+          xcodebuild build \
+            -scheme taskOS \
+            -project taskOS.xcodeproj \
+            -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO \
+            | xcpretty --color || true
+
+      # ── 6. Run Unit Tests ─────────────────────────────────────────────────────
+      - name: Run unit tests
+        run: |
+          xcodebuild test \
+            -scheme taskOS \
+            -project taskOS.xcodeproj \
+            -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
+            -testPlan taskOSTests \
+            -resultBundlePath TestResults.xcresult \
+            CODE_SIGNING_ALLOWED=NO \
+            ENABLE_TESTING_SEARCH_PATHS=YES \
+            | xcpretty --color --report junit --output test-results.xml || true
+
+      # ── 7. Upload test results ────────────────────────────────────────────────
+      - name: Upload test results (.xcresult)
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: TestResults-${{ github.run_number }}
+          path: TestResults.xcresult
+          retention-days: 14
+
+      - name: Upload JUnit XML report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: JUnitReport-${{ github.run_number }}
+          path: test-results.xml
+          retention-days: 14
+
+      # ── 8. Publish test summary ───────────────────────────────────────────────
+      - name: Publish test summary
+        uses: EnricoMi/publish-unit-test-result-action/macos@v2
+        if: always()
+        with:
+          files: test-results.xml
+          check_name: "Unit Test Results"
+          comment_mode: off

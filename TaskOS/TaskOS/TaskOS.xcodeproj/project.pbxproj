@@ -6,11 +6,27 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		DA247A432F42EC33000FDF82 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA5C3DDD2F42E3FC00A1D20B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DA5C3DE42F42E3FC00A1D20B;
+			remoteInfo = TaskOS;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		DA247A3F2F42EC33000FDF82 /* TaskOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TaskOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA5C3DE52F42E3FC00A1D20B /* TaskOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TaskOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		DA247A402F42EC33000FDF82 /* TaskOSTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = TaskOSTests;
+			sourceTree = "<group>";
+		};
 		DA5C3DE72F42E3FC00A1D20B /* TaskOS */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = TaskOS;
@@ -19,6 +35,13 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		DA247A3C2F42EC33000FDF82 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DA5C3DE22F42E3FC00A1D20B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -33,6 +56,7 @@
 			isa = PBXGroup;
 			children = (
 				DA5C3DE72F42E3FC00A1D20B /* TaskOS */,
+				DA247A402F42EC33000FDF82 /* TaskOSTests */,
 				DA5C3DE62F42E3FC00A1D20B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,6 +65,7 @@
 			isa = PBXGroup;
 			children = (
 				DA5C3DE52F42E3FC00A1D20B /* TaskOS.app */,
+				DA247A3F2F42EC33000FDF82 /* TaskOSTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,6 +73,29 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		DA247A3E2F42EC33000FDF82 /* TaskOSTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DA247A452F42EC33000FDF82 /* Build configuration list for PBXNativeTarget "TaskOSTests" */;
+			buildPhases = (
+				DA247A3B2F42EC33000FDF82 /* Sources */,
+				DA247A3C2F42EC33000FDF82 /* Frameworks */,
+				DA247A3D2F42EC33000FDF82 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DA247A442F42EC33000FDF82 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				DA247A402F42EC33000FDF82 /* TaskOSTests */,
+			);
+			name = TaskOSTests;
+			packageProductDependencies = (
+			);
+			productName = TaskOSTests;
+			productReference = DA247A3F2F42EC33000FDF82 /* TaskOSTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		DA5C3DE42F42E3FC00A1D20B /* TaskOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DA5C3DF02F42E3FF00A1D20B /* Build configuration list for PBXNativeTarget "TaskOS" */;
@@ -80,6 +128,10 @@
 				LastSwiftUpdateCheck = 2620;
 				LastUpgradeCheck = 2620;
 				TargetAttributes = {
+					DA247A3E2F42EC33000FDF82 = {
+						CreatedOnToolsVersion = 26.2;
+						TestTargetID = DA5C3DE42F42E3FC00A1D20B;
+					};
 					DA5C3DE42F42E3FC00A1D20B = {
 						CreatedOnToolsVersion = 26.2;
 					};
@@ -100,11 +152,19 @@
 			projectRoot = "";
 			targets = (
 				DA5C3DE42F42E3FC00A1D20B /* TaskOS */,
+				DA247A3E2F42EC33000FDF82 /* TaskOSTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		DA247A3D2F42EC33000FDF82 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DA5C3DE32F42E3FC00A1D20B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -115,6 +175,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		DA247A3B2F42EC33000FDF82 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DA5C3DE12F42E3FC00A1D20B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -124,7 +191,55 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		DA247A442F42EC33000FDF82 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DA5C3DE42F42E3FC00A1D20B /* TaskOS */;
+			targetProxy = DA247A432F42EC33000FDF82 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		DA247A462F42EC33000FDF82 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.G5Labs.TaskOSTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TaskOS.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TaskOS";
+			};
+			name = Debug;
+		};
+		DA247A472F42EC33000FDF82 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.G5Labs.TaskOSTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TaskOS.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TaskOS";
+			};
+			name = Release;
+		};
 		DA5C3DEE2F42E3FF00A1D20B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -309,6 +424,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		DA247A452F42EC33000FDF82 /* Build configuration list for PBXNativeTarget "TaskOSTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DA247A462F42EC33000FDF82 /* Debug */,
+				DA247A472F42EC33000FDF82 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		DA5C3DE02F42E3FC00A1D20B /* Build configuration list for PBXProject "TaskOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
