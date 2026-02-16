@@ -37,6 +37,7 @@ final class AuthenticationService: NSObject {
 
     // MARK: - Sign In with Apple
 
+    @discardableResult
     func signInWithApple() async throws -> AppUser {
         let nonce = randomNonce()
         currentNonce = nonce
@@ -58,6 +59,7 @@ final class AuthenticationService: NSObject {
     // Requires: FirebaseAuth + GoogleSignIn SDK
     // Uncomment after adding Firebase packages
 
+    @discardableResult
     func signInWithGoogle(presentingViewController: UIViewController) async throws -> AppUser {
         // ── Uncomment after adding firebase-ios-sdk + GoogleSignIn SPM packages ──
         //
@@ -99,6 +101,7 @@ final class AuthenticationService: NSObject {
 
     // MARK: - Email / Password Sign In
 
+    @discardableResult
     func signInWithEmail(email: String, password: String) async throws -> AppUser {
         isLoading = true
         defer { isLoading = false }
@@ -131,6 +134,7 @@ final class AuthenticationService: NSObject {
 
     // MARK: - Email / Password Sign Up
 
+    @discardableResult
     func createAccount(email: String, password: String, displayName: String) async throws -> AppUser {
         isLoading = true
         defer { isLoading = false }
@@ -318,9 +322,10 @@ extension AuthenticationService: ASAuthorizationControllerDelegate {
 
 extension AuthenticationService: ASAuthorizationControllerPresentationContextProviding {
     func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
-        UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .first?.keyWindow ?? UIWindow()
+        guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
+            return UIWindow(windowScene: UIWindowScene())
+        }
+        return scene.keyWindow ?? UIWindow(windowScene: scene)
     }
 }
 
