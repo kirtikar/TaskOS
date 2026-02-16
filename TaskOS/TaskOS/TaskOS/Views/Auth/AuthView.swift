@@ -138,27 +138,23 @@ struct AuthView: View {
     private var socialButtons: some View {
         VStack(spacing: DS.Spacing.sm) {
             // Sign in with Apple
-            SignInWithAppleButton(.signIn) { request in
-                request.requestedScopes = [.fullName, .email]
-            } onCompletion: { _ in
-                // Handled by AuthenticationService delegate
-            }
-            .signInWithAppleButtonStyle(.whiteOutline)
-            .frame(height: 50)
-            .clipShape(RoundedRectangle(cornerRadius: DS.Radius.sm))
-            .onTapGesture {
+            SocialSignInButton(
+                icon: "apple.logo",
+                label: "Sign in with Apple",
+                foreground: DS.Colors.label,
+                background: DS.Colors.secondaryBG,
+                border: DS.Colors.separator
+            ) {
                 Task<Void, Never> {
                     do {
                         try await auth.signInWithApple()
                     } catch AuthError.signInCancelled {
                         // user tapped cancel — no-op
                     } catch {
-                        // handled in form
+                        // silently ignore other errors on this screen
                     }
                 }
             }
-            // Use the real button above for correct Apple HIG appearance,
-            // but drive the action from our service for consistency.
 
             // Google Sign-In
             SocialSignInButton(
