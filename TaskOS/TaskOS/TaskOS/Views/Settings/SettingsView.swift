@@ -255,7 +255,7 @@ struct TagManagerView: View {
     }
 }
 
-/#Preview {
+#Preview {
     SettingsView()
         .modelContainer(for: [Task.self, Project.self, Tag.self, Subtask.self], inMemory: true)
         .environment(ThemeManager.shared)
