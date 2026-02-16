@@ -1,214 +1,230 @@
-# TaskOS — Xcode Setup & iPhone Install Guide
+# TaskOS — Xcode 26 Setup Guide (Steps 5–14)
 
-> Xcode 26.2 · Swift 6.2 · iOS 17+ · iPhone 12 Mini
+> Verified for **Xcode 26.2** · Swift 6.2 · iOS 17+ · iPhone 12 Mini
 
 ---
 
-## Part 1 — Create the Xcode Project
+## Where You Are
 
-### Step 1 — Open Xcode and create a new project
+- ✅ Steps 1–4 done: project created, source files imported, AccentColor set
+- ▶️ You are here: **Step 5 — Set deployment target**
 
-1. Open **Xcode** from `/Applications/Xcode.app`
-2. At the welcome screen click **"Create New Project..."**
-   *(or menu: File → New → Project)*
-3. Select template: **iOS → App** → click **Next**
+---
 
-4. Fill in the project options exactly:
+## Step 5 — Set iOS Deployment Target
 
-   | Field | Value |
-   |---|---|
-   | Product Name | `TaskOS` |
-   | Team | Sign in with your Apple ID (free is fine for device testing) |
-   | Organization Identifier | `com.yourname` (e.g. `com.kirtikar`) |
-   | Bundle Identifier | auto-filled as `com.kirtikar.TaskOS` |
-   | Interface | **SwiftUI** |
-   | Language | **Swift** |
-   | Storage | **None** |
-   | Include Tests | ✅ checked |
+> Same location as older Xcode. No change in Xcode 26.
 
-5. Click **Next** → save the project **inside this folder:**
+1. In the left sidebar (**Project Navigator**), click the **blue TaskOS icon** at the very top
+2. The project editor opens. In the **left pane of that editor** you'll see two sections:
+   - A **PROJECT** row (blue document icon)
+   - A **TARGETS** row with TaskOS under it
+3. Click **TaskOS** under TARGETS (not the project)
+4. Click the **General** tab at the top of the right pane
+5. Scroll down to the **"Minimum Deployments"** section
+6. Click the iOS dropdown → select **iOS 17.0**
+
+---
+
+## Step 6 — Add Notification Permission
+
+> Xcode 26 can auto-detect missing privacy keys at runtime, but add it manually now to avoid a crash on first run.
+
+1. Still on the same screen (TaskOS target selected)
+2. Click the **Info** tab (next to General)
+3. Hover over any row in the list → a **`+`** button appears at the end of the row — click it
+4. A dropdown appears — type `notification` to filter
+5. Select **"Privacy - User Notifications Usage Description"**
+6. In the value column, type:
    ```
-   /Users/kirtikar/Documents/Codes/iosTasks/
+   TaskOS reminds you about tasks when they're due.
    ```
-   Xcode will create `iosTasks/TaskOS/TaskOS.xcodeproj`
+7. Press **Return**
 
 ---
 
-## Part 2 — Add the Source Files
+## Step 7 — Add Sign in with Apple Capability
 
-### Step 2 — Delete the default generated files
+> Xcode 26 note: Signing & Capabilities tab is identical to Xcode 15/16. Usage descriptions are now also editable directly in this tab.
 
-In the Xcode Project Navigator (left sidebar), find and delete these files
-**(right-click → Delete → Move to Trash):**
+1. Still with the TaskOS **target** selected
+2. Click **Signing & Capabilities** tab
+3. Under the "Signing" section, make sure:
+   - ✅ **Automatically manage signing** is checked
+   - **Team** is set to your Apple ID (click the dropdown → "Add an Account" if needed)
+4. Click the **`+ Capability`** button in the top-left of this tab
+5. A search sheet slides down — type `apple`
+6. Double-click **"Sign in with Apple"**
+7. It appears as a new section. That's it — no further config needed.
 
-- `TaskOS/ContentView.swift`
-- `TaskOS/TaskOSApp.swift`
-- `TaskOS/Assets.xcassets` — **keep this one**, just expand and edit it
-
-### Step 3 — Add our source files to Xcode
-
-In **Finder**, open:
-```
-/Users/kirtikar/Documents/Codes/iosTasks/TaskOS/
-```
-
-You'll see these folders: `App`, `Models`, `DesignSystem`, `ViewModels`, `Views`, `Services`
-
-**Drag all of them** into the Xcode Project Navigator, dropping on the `TaskOS` group (blue folder icon).
-
-When the dialog appears:
-- ✅ **Copy items if needed**
-- ✅ **Create groups** (not folder references)
-- Target membership: ✅ **TaskOS**
-
-Click **Finish**.
-
-### Step 4 — Configure AccentColor in Assets
-
-1. In Project Navigator, open `Assets.xcassets`
-2. The `AccentColor` color set should already exist — if not, right-click → **New Color Set** → name it `AccentColor`
-3. Click the `AccentColor` set → in Attributes Inspector (right panel):
-   - Set **Any Appearance** to: `#007AFF` (hex input)
-   - Set **Dark** to: `#0A84FF` (slightly brighter for dark mode)
-4. Optionally add `AccentSoft` color set as `#007AFF` at 20% opacity
+**If you see a signing error** (red warning):
+- Xcode → **Settings** (⌘,) → **Accounts** tab → click `+` → **Apple ID** → sign in
+- Come back to Signing & Capabilities → select your Team from the dropdown
 
 ---
 
-## Part 3 — Configure the Project
+## Step 8 — Build & Run in Simulator
 
-### Step 5 — Set iOS deployment target
+1. In the Xcode **toolbar** (center-top), click the device name (shows something like "iPhone 16")
 
-1. Click the **TaskOS project** (top of Navigator, blue icon)
-2. Select **TaskOS target** → **General** tab
-3. Under **Minimum Deployments** → set to **iOS 17.0**
+   > In Xcode 26 the toolbar uses a Liquid Glass design — it floats above the editor. The device selector is still in the same center position.
 
-### Step 6 — Add notification permission to Info.plist
+2. From the dropdown select **iPhone 16** (or any iOS 17+ simulator)
+   - If no simulators appear: **Xcode menu → Settings → Platforms → iOS** → click download button next to iOS 17 or 18
+3. Press **⌘R** (or click the **▶ Play button**)
+4. First build: ~45–90 seconds. Progress shows in the top bar.
 
-1. Still in the target, go to the **Info** tab
-2. Click the `+` at the end of any existing row
-3. Add:
-   - Key: `Privacy - User Notifications Usage Description`
-   - Value: `TaskOS reminds you about tasks when they're due.`
+**The app should launch and show the TaskOS Auth screen.**
 
-### Step 7 — Enable Sign in with Apple capability
+### Build errors and fixes
 
-1. Go to **Signing & Capabilities** tab
-2. Click **+ Capability** (top left of that tab)
-3. Search for and add: **Sign in with Apple**
-4. Make sure **Automatically manage signing** is checked
-5. Set your **Team** to your Apple ID
-
----
-
-## Part 4 — Build & Run in Simulator
-
-### Step 8 — Select a simulator and run
-
-1. In the Xcode toolbar at the top, click the **device selector** (shows "iPhone 16" or similar)
-2. Choose **iPhone 16** simulator (or any iOS 17+ simulator)
-3. Press **⌘R** (or click the ▶ Play button)
-4. First build takes ~45–90 seconds — watch the progress bar at top
-
-**Expected result:** Simulator opens, app launches to the Auth screen.
-
-### Common build errors and fixes
-
-| Error | Fix |
+| Error message | What to do |
 |---|---|
-| `Cannot find 'Task' in scope` | Swift has a built-in `Task` type. In Xcode: Edit → Find → Find in Project → replace `Task(` with `TaskItem(` in models only if it persists |
-| `No such module 'SwiftData'` | Check deployment target is iOS 17.0, not lower |
-| `@Observable macro not found` | Same — needs iOS 17 target |
-| Missing file errors | Re-do Step 3, make sure all subfolders were dragged in |
-| Signing error | Xcode → Preferences → Accounts → add your Apple ID |
+| `Cannot find type 'Task' in scope` | Rename our `Task` model — see box below |
+| `No such module 'SwiftData'` | Deployment target not set to iOS 17.0 — redo Step 5 |
+| `Cannot find 'DS' in scope` | `DesignSystem.swift` wasn't imported — re-drag the DesignSystem folder |
+| `Value of type 'X' has no member 'Y'` | A source file is missing — check all folders are in Navigator |
+| Signing: "No profiles for X found" | Set your Team in Step 7 first |
+| `@Observable` macro error | Deployment target below iOS 17 — redo Step 5 |
+
+> **Fix for `Cannot find type 'Task' in scope`**
+> Swift has a built-in `Task` type for async work. If Xcode gets confused:
+> In Xcode: **Edit → Find → Find and Replace in Project**
+> - Search: `final class Task {`
+> - Replace: `final class TaskItem {`
+> Then update all references — or add `typealias TaskItem = Task` at the top of `Task.swift`.
+> *Only do this if the error actually appears.*
 
 ---
 
-## Part 5 — Install on iPhone 12 Mini
+## Step 9 — Connect iPhone 12 Mini
 
-### Step 9 — Connect your iPhone
+1. Use a **Lightning cable** to connect iPhone 12 Mini to your Mac
+2. Unlock your iPhone
+3. A popup appears on iPhone: **"Trust This Computer?"** → tap **Trust** → enter your passcode
+4. In the Xcode toolbar, click the device selector (where the simulator name is)
+5. Under **"Physical Devices"** or **"iOS Devices"** your iPhone 12 Mini should appear
+6. Select it
 
-1. Connect iPhone 12 Mini to your Mac with a **USB-C or Lightning cable**
-2. On the iPhone: tap **"Trust"** when the "Trust This Computer?" dialog appears → enter your iPhone passcode
-3. In Xcode toolbar: click the device selector → your **iPhone 12 Mini** should appear under *Physical Devices*
-4. Select it
+**If iPhone doesn't appear:**
+- Try a different USB port or cable
+- Open **Window → Devices and Simulators** (⌘⇧2) — if it shows there but not in toolbar, restart Xcode
+- Make sure iPhone is unlocked when connecting
 
-### Step 10 — Trust your developer certificate on iPhone
+---
 
-**First time only — do this on the iPhone:**
+## Step 10 — Enable Developer Mode on iPhone 12 Mini
 
-1. Go to **Settings → General → VPN & Device Management**
-2. Under "Developer App" you'll see your Apple ID email
-3. Tap it → tap **"Trust [your email]"** → tap Trust again to confirm
+> Required on iOS 16 and above before Xcode can install apps.
 
-*(This only appears after the first install attempt. You may need to do step 11 first, then come back here.)*
+**On the iPhone:**
+1. **Settings → Privacy & Security**
+2. Scroll to the bottom → tap **Developer Mode**
+3. Toggle it **On**
+4. Tap **Restart** → iPhone reboots
+5. After restart, a system prompt appears → tap **Enable**
+6. Enter your passcode
 
-### Step 11 — Build and install on device
+> If **Developer Mode** doesn't appear in Settings, connect the iPhone to Xcode first (Step 9), let Xcode detect it for a few seconds — then check Settings again.
 
-1. In Xcode: make sure your **iPhone 12 Mini** is selected in the toolbar
+---
+
+## Step 11 — Install on iPhone 12 Mini
+
+1. In Xcode toolbar, confirm **your iPhone 12 Mini** is selected (not a simulator)
 2. Press **⌘R**
-3. Xcode will compile and wirelessly (or via cable) install the app
-4. The app will launch automatically on your iPhone
+3. Xcode builds and installs — the app launches on your iPhone
 
-**If you see "Developer Mode" prompt on iPhone:**
-- Settings → Privacy & Security → Developer Mode → turn it On → restart iPhone → then re-run ⌘R
-
----
-
-## Part 6 — Optional: Wireless Install (no cable needed after first time)
-
-1. Connect iPhone via cable once and run the app successfully
-2. In Xcode: **Window → Devices and Simulators**
-3. Select your iPhone → check **"Connect via network"**
-4. From now on, keep iPhone on the same WiFi as your Mac — no cable needed for ⌘R
+**First time only — trust the developer certificate on iPhone:**
+1. The app may show "Untrusted Developer" error and refuse to open
+2. Go to iPhone: **Settings → General → VPN & Device Management**
+3. Under **"Developer App"** → tap your Apple ID email
+4. Tap **"Trust [your email]"** → tap **Trust** again to confirm
+5. Open the app — it works now
 
 ---
 
-## Part 7 — Enable Firebase (Google + Email Sign-In)
+## Step 12 — Go Wireless (No Cable After This)
 
-Once the app runs, to unlock Google and Email auth:
+1. Make sure iPhone and Mac are on the **same WiFi network**
+2. In Xcode: **Window → Devices and Simulators** (⌘⇧2)
+3. Select your iPhone 12 Mini
+4. Check **"Connect via network"** ✅
+5. A globe icon appears next to your device — cable can be removed
+6. From now on: just have iPhone nearby on WiFi → press ⌘R to install
 
-### Step 12 — Add Firebase package
+---
 
-In Xcode:
+## Step 13 — Add Firebase (Unlocks Google + Email Sign-In)
+
+### Add the package
+
 1. **File → Add Package Dependencies...**
-2. Paste URL: `https://github.com/firebase/firebase-ios-sdk`
-3. Click **Add Package**
-4. Select these products:
-   - ✅ `FirebaseAuth`
-   - ✅ `FirebaseFirestore` *(optional, for cloud sync later)*
+2. In the search bar (top right) paste:
+   ```
+   https://github.com/firebase/firebase-ios-sdk
+   ```
+3. Press **Return** → wait for Xcode to resolve it (~30 seconds)
+4. Under "Add to Target: TaskOS", select these products:
+   - ✅ **FirebaseAuth**
+   - ✅ **FirebaseFirestore** *(optional — for cloud sync later)*
+   - Leave everything else unchecked
 5. Click **Add Package**
 
-### Step 13 — Set up Firebase Console
+### Set up Firebase Console
 
-1. Go to [console.firebase.google.com](https://console.firebase.google.com)
-2. **Create a project** → name it `TaskOS`
-3. Add an **iOS app**:
-   - Bundle ID: `com.kirtikar.TaskOS` *(must match exactly)*
-4. Download `GoogleService-Info.plist`
-5. Drag `GoogleService-Info.plist` into Xcode project root
-   - ✅ Copy items if needed → target: TaskOS
+1. Go to **[console.firebase.google.com](https://console.firebase.google.com)**
+2. Click **"Create a project"** → name it `TaskOS` → Continue
+3. Disable Google Analytics (optional) → **Create project**
+4. Click the **iOS icon** to add an iOS app
+5. Bundle ID: enter exactly **`com.kirtikar.TaskOS`** *(must match Xcode)*
+6. Click **Register App** → **Download GoogleService-Info.plist**
+7. Drag `GoogleService-Info.plist` into Xcode's Project Navigator → drop on the `TaskOS` group
+   - ✅ Copy items if needed
+   - ✅ Target: TaskOS
+8. Click **Finish** in the Firebase Console wizard
 
-6. In Firebase Console → **Authentication → Sign-in method**, enable:
-   - ✅ Apple
-   - ✅ Google
-   - ✅ Email/Password
+### Enable sign-in methods in Firebase Console
 
-### Step 14 — Activate Firebase in the app
+1. Left sidebar → **Authentication** → **Get started**
+2. **Sign-in method** tab → enable each:
+   - **Apple** → Enable → Save
+   - **Google** → Enable → enter support email → Save
+   - **Email/Password** → Enable → Save
 
-In `TaskOSApp.swift`, add at the top:
+### Activate Firebase in the app
+
+Open [TaskOSApp.swift](TaskOS/TaskOS/TaskOS/App/TaskOSApp.swift) and make these two edits:
+
+**At the top, add:**
 ```swift
 import FirebaseCore
 ```
-Add in the `App` struct initializer:
+
+**Inside `TaskOSApp`, add an `init`:**
 ```swift
 init() {
     FirebaseApp.configure()
 }
 ```
 
-Then in `AuthenticationService.swift`, uncomment all the blocks marked:
+Then open [AuthenticationService.swift](TaskOS/TaskOS/TaskOS/Services/AuthenticationService.swift) and uncomment every block marked:
 ```
 // ── Uncomment after adding firebase-ios-sdk ──
+```
+There are 4 such blocks: `signInWithGoogle`, `signInWithEmail`, `createAccount`, and `sendPasswordReset`.
+
+---
+
+## Step 14 — Commit & Push After Each Session
+
+Any time you make changes in Xcode, push them to GitHub:
+
+```bash
+cd /Users/kirtikar/Documents/Codes/iosTasks
+git add .
+git commit -m "your message here"
+git push
 ```
 
 ---
@@ -218,19 +234,28 @@ Then in `AuthenticationService.swift`, uncomment all the blocks marked:
 | Action | Shortcut |
 |---|---|
 | Build & Run | ⌘R |
-| Stop | ⌘. |
-| Clean build | ⌘⇧K |
-| Open simulator | ⌘⇧2 |
+| Stop running app | ⌘. |
+| Clean build folder | ⌘⇧K |
+| Open Devices window | ⌘⇧2 |
 | Show/hide Navigator | ⌘0 |
-| Open file quickly | ⌘⇧O |
-| Device list | ⌘⇧2 |
+| Open file by name | ⌘⇧O |
+| Find in project | ⌘⇧F |
+| Toggle dark/light preview | Canvas → Variants |
 
 ---
 
-## What the App Does Right Now (no Firebase needed)
+## App Flow Right Now (No Firebase Required)
 
-- Sign in with Apple works out of the box
-- Today, Inbox, Projects, Task Detail, Quick Add, Search, Settings all functional
-- Tasks persist locally via SwiftData
-- Notifications work once permission is granted
-- Dark/light mode works automatically
+```
+Launch
+ └── Auth screen
+      ├── "Sign in with Apple"  ✅ works immediately
+      └── Google / Email        ⏳ works after Step 13
+           └── Onboarding (first launch only)
+                └── Main App
+                     ├── Today tab
+                     ├── Inbox tab
+                     ├── Projects tab
+                     ├── Search tab
+                     └── Settings tab
+```
