@@ -6,16 +6,16 @@ import SwiftData
 enum AppTab: Int, CaseIterable {
     case today    = 0
     case inbox    = 1
-    case projects = 2
-    case search   = 3
+    case upcoming = 2
+    case projects = 3
     case settings = 4
 
     var title: String {
         switch self {
         case .today:    return "Today"
         case .inbox:    return "Inbox"
+        case .upcoming: return "Upcoming"
         case .projects: return "Projects"
-        case .search:   return "Search"
         case .settings: return "Settings"
         }
     }
@@ -24,8 +24,8 @@ enum AppTab: Int, CaseIterable {
         switch self {
         case .today:    return "sun.max.fill"
         case .inbox:    return "tray.fill"
+        case .upcoming: return "calendar"
         case .projects: return "square.grid.2x2.fill"
-        case .search:   return "magnifyingglass"
         case .settings: return "gearshape.fill"
         }
     }
@@ -48,11 +48,11 @@ struct ContentView: View {
                 InboxView()
                     .tag(AppTab.inbox)
 
+                UpcomingView()
+                    .tag(AppTab.upcoming)
+
                 ProjectsView()
                     .tag(AppTab.projects)
-
-                SearchView()
-                    .tag(AppTab.search)
 
                 SettingsView()
                     .tag(AppTab.settings)
@@ -78,7 +78,7 @@ struct ContentView: View {
     private var customTabBar: some View {
         HStack(spacing: 0) {
             ForEach(AppTab.allCases, id: \.rawValue) { tab in
-                if tab == .search {
+                if tab == .upcoming {
                     // Center: Quick Add FAB placeholder (spacer)
                     Spacer()
                         .frame(width: 72)

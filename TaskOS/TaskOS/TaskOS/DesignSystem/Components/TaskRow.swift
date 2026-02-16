@@ -1,30 +1,28 @@
 import SwiftUI
 
 // MARK: - TaskRow
-// The core reusable cell used in every task list in the app.
+// Core reusable cell. Features a satisfying Things 3-style completion animation.
 
 struct TaskRow: View {
     let task: TaskItem
     var onToggle: () -> Void
     var onTap: () -> Void
 
+    // Animation state
     @State private var checkScale: CGFloat = 1.0
+    @State private var checkOpacity: Double = 1.0
+    @State private var rowOpacity: Double = 1.0
+    @State private var particlesVisible = false
 
     var body: some View {
         Button(action: onTap) {
             HStack(alignment: .top, spacing: DS.Spacing.sm) {
-                // Completion circle
                 completionButton
-
-                // Content
                 VStack(alignment: .leading, spacing: DS.Spacing.xxs) {
                     titleRow
                     metaRow
                 }
-
                 Spacer(minLength: 0)
-
-                // Priority flag (if set)
                 if task.priority != .none {
                     Image(systemName: task.priority.sfSymbol)
                         .font(.caption.weight(.bold))
@@ -34,46 +32,58 @@ struct TaskRow: View {
             .padding(.vertical, DS.Spacing.xs)
             .padding(.horizontal, DS.Spacing.md)
             .contentShape(Rectangle())
+            .opacity(rowOpacity)
         }
         .buttonStyle(TaskRowButtonStyle())
+        .onChange(of: task.isCompleted) { _, completed in
+            if completed { playCompletionAnimation() }
+            else { resetAnimation() }
+        }
     }
 
-    // MARK: - Subviews
+    // MARK: - Completion Button
 
     private var completionButton: some View {
-        Button(action: {
-            withAnimation(DS.Animation.bouncy) {
-                checkScale = 1.3
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                withAnimation(DS.Animation.quick) {
-                    checkScale = 1.0
-                }
-            }
-            onToggle()
-        }) {
-            ZStack {
-                Circle()
-                    .strokeBorder(
-                        task.isCompleted ? Color.clear : priorityCircleColor,
-                        lineWidth: 1.5
-                    )
-                    .background(
-                        Circle().fill(task.isCompleted ? DS.Colors.accent : Color.clear)
-                    )
-                    .frame(width: 22, height: 22)
+        ZStack {
+            // Completion circle
+            Circle()
+                .strokeBorder(
+                    task.isCompleted ? Color.clear : priorityCircleColor,
+                    lineWidth: 1.5
+                )
+                .background(
+                    Circle().fill(task.isCompleted ? DS.Colors.accent : Color.clear)
+                )
+                .frame(width: 22, height: 22)
 
-                if task.isCompleted {
-                    Image(systemName: "checkmark")
-                        .font(.system(size: 11, weight: .bold))
-                        .foregroundStyle(.white)
+            if task.isCompleted {
+                Image(systemName: "checkmark")
+                    .font(.system(size: 11, weight: .bold))
+                    .foregroundStyle(.white)
+                    .transition(.scale.combined(with: .opacity))
+            }
+
+            // Burst particles (shows briefly on completion)
+            if particlesVisible {
+                ForEach(0..<6, id: \.self) { i in
+                    Circle()
+                        .fill(DS.Colors.accent.opacity(0.6))
+                        .frame(width: 4, height: 4)
+                        .offset(burstOffset(index: i, radius: 14))
+                        .opacity(particlesVisible ? 0 : 1)
                 }
             }
-            .scaleEffect(checkScale)
         }
-        .buttonStyle(.plain)
+        .scaleEffect(checkScale)
+        .opacity(checkOpacity)
+        .frame(width: 22, height: 22)
+        .onTapGesture {
+            onToggle()
+        }
         .padding(.top, 1)
     }
+
+    // MARK: - Title Row
 
     private var titleRow: some View {
         Text(task.title)
@@ -82,11 +92,13 @@ struct TaskRow: View {
             .strikethrough(task.isCompleted, color: DS.Colors.tertiaryLabel)
             .lineLimit(2)
             .multilineTextAlignment(.leading)
+            .animation(DS.Animation.quick, value: task.isCompleted)
     }
+
+    // MARK: - Meta Row
 
     private var metaRow: some View {
         HStack(spacing: DS.Spacing.xs) {
-            // Due date
             if let due = task.dueDate {
                 HStack(spacing: 3) {
                     Image(systemName: task.isOverdue ? "exclamationmark.circle.fill" : "calendar")
@@ -97,35 +109,40 @@ struct TaskRow: View {
                 .foregroundStyle(task.isOverdue ? DS.Colors.overdue : DS.Colors.secondaryLabel)
             }
 
-            // Project chip
             if let project = task.project {
                 HStack(spacing: 3) {
-                    Circle()
-                        .fill(project.colorName.color)
-                        .frame(width: 6, height: 6)
+                    Circle().fill(project.colorName.color).frame(width: 6, height: 6)
                     Text(project.name)
                         .font(DS.Typography.caption1)
                         .foregroundStyle(DS.Colors.secondaryLabel)
                 }
             }
 
-            // Subtasks indicator
             if !task.subtasks.isEmpty {
                 HStack(spacing: 3) {
-                    Image(systemName: "checklist")
-                        .font(.caption2)
+                    Image(systemName: "checklist").font(.caption2)
                     Text("\(task.completedSubtasks)/\(task.subtasks.count)")
                         .font(DS.Typography.caption1)
                 }
                 .foregroundStyle(DS.Colors.secondaryLabel)
             }
 
-            // Tags
+            if task.isSomeday {
+                HStack(spacing: 3) {
+                    Image(systemName: "moon.fill").font(.caption2)
+                    Text("Someday")
+                        .font(DS.Typography.caption1)
+                }
+                .foregroundStyle(.indigo.opacity(0.7))
+            }
+
             ForEach(task.tags.prefix(2)) { tag in
                 TagChip(tag: tag, size: .small)
             }
         }
     }
+
+    // MARK: - Priority circle color
 
     private var priorityCircleColor: Color {
         switch task.priority {
@@ -134,6 +151,55 @@ struct TaskRow: View {
         case .low:    return DS.Colors.priorityLow
         case .none:   return DS.Colors.separator
         }
+    }
+
+    // MARK: - Completion Animation
+
+    private func playCompletionAnimation() {
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+
+        // 1. Scale up the check
+        withAnimation(.spring(response: 0.2, dampingFraction: 0.5)) {
+            checkScale = 1.35
+            particlesVisible = true
+        }
+
+        // 2. Scale back and show particles fading
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                checkScale = 1.0
+            }
+        }
+
+        // 3. Fade out particles
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            withAnimation(.easeOut(duration: 0.3)) {
+                particlesVisible = false
+            }
+        }
+
+        // 4. Gently dim the row
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+            withAnimation(.easeOut(duration: 0.3)) {
+                rowOpacity = 0.5
+            }
+        }
+    }
+
+    private func resetAnimation() {
+        withAnimation(DS.Animation.quick) {
+            rowOpacity = 1.0
+            checkScale = 1.0
+            checkOpacity = 1.0
+            particlesVisible = false
+        }
+    }
+
+    // MARK: - Burst offset helper
+
+    private func burstOffset(index: Int, radius: CGFloat) -> CGSize {
+        let angle = Double(index) * (360.0 / 6.0) * .pi / 180
+        return CGSize(width: cos(angle) * radius, height: sin(angle) * radius)
     }
 }
 
@@ -156,8 +222,7 @@ extension Date {
         if Calendar.current.isDateInYesterday(self) { return "Yesterday" }
         let formatter = DateFormatter()
         formatter.dateFormat = Calendar.current.isDate(self, equalTo: Date(), toGranularity: .year)
-            ? "MMM d"
-            : "MMM d, yyyy"
+            ? "MMM d" : "MMM d, yyyy"
         return formatter.string(from: self)
     }
 }

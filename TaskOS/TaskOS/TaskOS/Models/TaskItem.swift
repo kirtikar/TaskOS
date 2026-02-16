@@ -64,7 +64,9 @@ final class TaskItem {
     var notes: String
     var isCompleted: Bool
     var isInInbox: Bool
+    var isSomeday: Bool       // defer indefinitely (Someday/Maybe)
     var dueDate: Date?
+    var startDate: Date?      // defer until this date (not shown before then)
     var reminderDate: Date?
     var priority: Priority
     var createdAt: Date
@@ -114,7 +116,9 @@ final class TaskItem {
         title: String,
         notes: String = "",
         isInInbox: Bool = true,
+        isSomeday: Bool = false,
         dueDate: Date? = nil,
+        startDate: Date? = nil,
         reminderDate: Date? = nil,
         priority: Priority = .none,
         project: Project? = nil
@@ -124,7 +128,9 @@ final class TaskItem {
         self.notes = notes
         self.isCompleted = false
         self.isInInbox = isInInbox
+        self.isSomeday = isSomeday
         self.dueDate = dueDate
+        self.startDate = startDate
         self.reminderDate = reminderDate
         self.priority = priority
         self.createdAt = Date()
