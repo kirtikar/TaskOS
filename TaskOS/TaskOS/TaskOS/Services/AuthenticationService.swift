@@ -322,9 +322,10 @@ extension AuthenticationService: ASAuthorizationControllerDelegate {
 
 extension AuthenticationService: ASAuthorizationControllerPresentationContextProviding {
     func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
-        guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
-            return UIWindow(windowScene: UIWindowScene())
-        }
+        let scenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+        // Prefer the active foreground scene; fall back to any connected scene.
+        // force-unwrap is safe: this is only called while the app is on screen.
+        let scene = scenes.first(where: { $0.activationState == .foregroundActive }) ?? scenes.first!
         return scene.keyWindow ?? UIWindow(windowScene: scene)
     }
 }
