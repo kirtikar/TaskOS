@@ -199,7 +199,7 @@ struct TaskRow: View {
 
     private func burstOffset(index: Int, radius: CGFloat) -> CGSize {
         let angle = Double(index) * (360.0 / 6.0) * .pi / 180
-        return CGSize(width: cos(angle) * radius, height: sin(angle) * radius)
+        return CGSize(width: CGFloat(cos(angle)) * radius, height: CGFloat(sin(angle)) * radius)
     }
 }
 
